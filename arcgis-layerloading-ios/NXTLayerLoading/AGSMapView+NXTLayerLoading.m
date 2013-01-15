@@ -11,7 +11,10 @@
 
 #import <objc/runtime.h>
 
-@implementation AGSMapViewBase (NXTLayerLoading)
+#define kNXTLLAutoTrackLayersKey @"NXTLLAutoTrackLayers"
+#define kNXTLLAutoTrackLayersDefault YES
+
+@implementation AGSMapView (NXTLayerLoading)
 +(void)load
 {
     // Swap some methods around...
@@ -25,23 +28,48 @@
     a = class_getInstanceMethod(swap, @selector(removeMapLayer:));
     b = class_getInstanceMethod(swap, @selector(nxtll_removeMapLayer:));
     method_exchangeImplementations(a, b);
+}
 
-    NSLog(@"Automatically tracking layer loading status…");
+-(BOOL)nxtll_autoTrackLayers
+{
+    NSNumber *temp = objc_getAssociatedObject(self, kNXTLLAutoTrackLayersKey);
+    if (!temp)
+    {
+        temp = [NSNumber numberWithBool:kNXTLLAutoTrackLayersDefault];
+        objc_setAssociatedObject(self, kNXTLLAutoTrackLayersKey, temp, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return temp.boolValue;
+}
+
+-(void)setNxtll_autoTrackLayers:(BOOL)nxtll_autoTrackLayers
+{
+    NSNumber *temp = [NSNumber numberWithBool:nxtll_autoTrackLayers];
+    objc_setAssociatedObject(self, kNXTLLAutoTrackLayersKey, temp, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    if (nxtll_autoTrackLayers)
+    {
+        NSLog(@"Automatically tracking layer loading status…");
+    }
+    else
+    {
+        NSLog(@"Manually tracking layer loading status…");
+    }
 }
 
 -(void)nxtll_addMapLayer:(AGSLayer *)mapLayer
 {
-//    NSLog(@"Adding map layer: %@", mapLayer);
-    
-    [mapLayer nxtll_startTracking];
+    if (self.nxtll_autoTrackLayers)
+    {
+//        NSLog(@"Add: %@", mapLayer.name);
+        [mapLayer nxtll_startTracking];
+    }
     
     [self nxtll_addMapLayer:mapLayer];
 }
 
 -(void)nxtll_removeMapLayer:(AGSLayer *)mapLayer
 {
-//    NSLog(@"Removing map layer: %@", mapLayer);
-    
+//    NSLog(@"Remove: %@", mapLayer.name);
     [mapLayer nxtll_stopTracking];
     
     [self nxtll_removeMapLayer:mapLayer];
