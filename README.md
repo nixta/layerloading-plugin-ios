@@ -17,6 +17,16 @@ Just add the .m and .h files for the AGSLayer+NXTLayerLoading and AGSMapView+NXT
 
 If you want to control layer tracking manually rather than automatically, either skip the AGSMapView category or use its property to disable automatic tracking.
 
+The AGSLayer+NXTLayerLoading.h file defines 4 notifications (whose object is the AGSLayer in question):
+
+### Load events:
+* Layer starts loading: **kNXTLLNotification_LayerLoading**
+* Layer finished loading: **kNXTLLNotification_LayerLoaded**
+
+### Framework events:
+* Layer starts being monitored: **kNXTLLNotification_LayerTrackingStartedForLayer**
+* Layer stops being monitored: **kNXTLLNotification_LayerTrackingStoppedForLayer**
+
 See the SampleViewController.m file for examples of how to use the layer tracking.
 
 ## Requirements
