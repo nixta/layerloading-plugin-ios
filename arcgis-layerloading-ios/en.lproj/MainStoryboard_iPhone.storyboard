@@ -15,6 +15,15 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pEg-Hl-13e" customClass="AGSMapView">
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                             </view>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Uninitialized" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RpI-a6-2fI">
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="36" id="wTU-2K-g9F"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="15"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="13f-2g-JY0">
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Reset">
@@ -39,25 +48,27 @@
                                 </state>
                                 <connections>
                                     <action selector="reloadMap:" destination="2" eventType="touchUpInside" id="NZ0-pQ-muV"/>
-                                    <action selector="resetMap:" destination="2" eventType="touchUpInside" id="qAL-wi-0iE"/>
                                 </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="RpI-a6-2fI" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="3Hu-I1-0MB"/>
+                            <constraint firstAttribute="trailing" secondItem="RpI-a6-2fI" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="GKS-kW-ebR"/>
                             <constraint firstAttribute="bottom" secondItem="ATa-gx-Pgs" secondAttribute="bottom" constant="20" symbolic="YES" type="default" id="IvG-oQ-B2y"/>
                             <constraint firstItem="pEg-Hl-13e" firstAttribute="leading" secondItem="3" secondAttribute="leading" type="default" id="LNd-Lh-UpB"/>
                             <constraint firstItem="pEg-Hl-13e" firstAttribute="bottom" secondItem="3" secondAttribute="bottom" type="default" id="Rax-aX-vIY"/>
-                            <constraint firstItem="ATa-gx-Pgs" firstAttribute="baseline" secondItem="13f-2g-JY0" secondAttribute="baseline" type="default" id="XYw-ub-e89"/>
                             <constraint firstAttribute="trailing" secondItem="ATa-gx-Pgs" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="bxw-hz-weH"/>
                             <constraint firstAttribute="bottom" secondItem="13f-2g-JY0" secondAttribute="bottom" constant="20" symbolic="YES" type="default" id="ccS-bc-7f4"/>
                             <constraint firstItem="pEg-Hl-13e" firstAttribute="trailing" secondItem="3" secondAttribute="trailing" type="default" id="dCb-ZI-STR"/>
                             <constraint firstItem="pEg-Hl-13e" firstAttribute="top" secondItem="3" secondAttribute="top" type="default" id="gUr-jt-eF2"/>
                             <constraint firstItem="13f-2g-JY0" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="i57-0K-Nec"/>
+                            <constraint firstItem="RpI-a6-2fI" firstAttribute="top" secondItem="3" secondAttribute="top" constant="20" symbolic="YES" type="default" id="lin-xt-BwU"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="mapView" destination="pEg-Hl-13e" id="Yee-Vx-AWe"/>
+                        <outlet property="trackingLabel" destination="RpI-a6-2fI" id="K3s-t6-Uka"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4" sceneMemberID="firstResponder"/>
