@@ -349,6 +349,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "arcgis-layerloading-ios/arcgis-layerloading-ios-Prefix.pch";
 				INFOPLIST_FILE = "arcgis-layerloading-ios/arcgis-layerloading-ios-Info.plist";
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",
@@ -356,6 +357,7 @@
 					ArcGIS,
 				);
 				PRODUCT_NAME = "arcgis-layerloading-ios";
+				VALID_ARCHS = armv7;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -374,6 +376,7 @@
 					ArcGIS,
 				);
 				PRODUCT_NAME = "arcgis-layerloading-ios";
+				VALID_ARCHS = armv7;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
