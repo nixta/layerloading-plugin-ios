@@ -10,6 +10,8 @@
 
 extern NSString *const kNXTLLNotification_LayerLoading;
 extern NSString *const kNXTLLNotification_LayerLoaded;
+extern NSString *const kNXTLLNotification_LayerTrackingStartedForLayer;
+extern NSString *const kNXTLLNotification_LayerTrackingStoppedForLayer;
 
 @interface AGSLayer (NXTLayerLoading)
 -(void)nxtll_startTracking;

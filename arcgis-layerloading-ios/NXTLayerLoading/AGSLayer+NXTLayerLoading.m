@@ -13,6 +13,8 @@
 
 NSString *const kNXTLLNotification_LayerLoading = @"NXTLLLayerLoading";
 NSString *const kNXTLLNotification_LayerLoaded = @"NXTLLLayerLoaded";
+NSString *const kNXTLLNotification_LayerTrackingStartedForLayer = @"NXTLLLayerTrackingOn";
+NSString *const kNXTLLNotification_LayerTrackingStoppedForLayer = @"NXTLLLayerTrackingOff";
 
 @interface AGSLayer (NXTLayerLoading_Internal)
 @property (nonatomic, assign, readwrite) BOOL nxtll_isTracking;
@@ -34,6 +36,15 @@ NSString *const kNXTLLNotification_LayerLoaded = @"NXTLLLayerLoaded";
     NSNumber *temp = [NSNumber numberWithBool:nxtll_isTracking];
     
     objc_setAssociatedObject(self, kNXTLL_LayerIsTrackingKey, temp, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+
+    if (nxtll_isTracking)
+    {
+        [[NSNotificationCenter defaultCenter] postNotificationName:kNXTLLNotification_LayerTrackingStartedForLayer object:self];
+    }
+    else
+    {
+        [[NSNotificationCenter defaultCenter] postNotificationName:kNXTLLNotification_LayerTrackingStoppedForLayer object:self];
+    }
 }
 
 -(void)nxtll_startTracking
