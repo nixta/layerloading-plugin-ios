@@ -1,5 +1,5 @@
-arcgis-layerloading-ios
-=======================
+layerloading-extension-ios
+===
 
 A sample framework to add notifications to show when layers in an [AGSMapView](http://resources.arcgis.com/en/help/runtime-ios-sdk/apiref/index.htm) are loading.
 
