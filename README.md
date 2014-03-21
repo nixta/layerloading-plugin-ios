@@ -1,37 +1,37 @@
 layerloading-plugin-ios
 ===
 
-A sample framework to add notifications to show when layers in an [AGSMapView](http://resources.arcgis.com/en/help/runtime-ios-sdk/apiref/index.htm) are loading.
+A sample framework to add notifications to show when layers in an [`AGSMapView`](https://developers.arcgis.com/ios/api-reference/interface_a_g_s_map_view.html) are loading.
 
 AGSMapView is a component of Esri's [ArcGIS Runtime SDK for iOS](http://resources.arcgis.com/en/help/runtime-ios-sdk/concepts/#//00pw00000003000000).
 
 ![App](https://raw.github.com/nixta/arcgis-layerloading-ios/master/arcgis-layerloading-ios.jpg)
 
 ## Features
-* Provides notifications from each AGSLayer when it starts/stops loading.
-* Automatically start tracking the loading state of layers as they're added to an AGSMapView.
+* Provides notifications from each `AGSLayer` when it starts/stops loading.
+* Automatically start tracking the loading state of layers as they're added to an `AGSMapView`.
 * Disable automatic tracking and allow tracking layers manually (with notifications as tracking starts/stops).
 
 ## Getting Started
-Just add the .m and .h files for the AGSLayer+NXTLayerLoading and AGSMapView+NXTLayerLoading categories to your project. You don't need to initialize anything. As long as the .m files are built as part of your target, the framework is hooked in.
+Just add the `.m` and `.h` files for the `AGSLayer+NXTLayerLoading` and `AGSMapView+NXTLayerLoading` categories to your project. You don't need to initialize anything. As long as the `.m` files are built as part of your target, the framework is hooked in.
 
-If you want to control layer tracking manually rather than automatically, either skip the AGSMapView category or use its property to disable automatic tracking.
+If you want to control layer tracking manually rather than automatically, either skip the `AGSMapView` category or use its property to disable automatic tracking.
 
-The AGSLayer+NXTLayerLoading.h file defines 4 notifications (whose object is the AGSLayer in question):
+The `AGSLayer+NXTLayerLoading.h` file defines 4 notifications (whose `object` property is the `AGSLayer` in question):
 
 ### Load events:
-* Layer starts loading: **kNXTLLNotification_LayerLoading**
-* Layer finished loading: **kNXTLLNotification_LayerLoaded**
+* Layer starts loading: `kNXTLLNotification_LayerLoading`
+* Layer finished loading: `kNXTLLNotification_LayerLoaded`
 
 ### Framework events:
-* Layer starts being monitored: **kNXTLLNotification_LayerTrackingStartedForLayer**
-* Layer stops being monitored: **kNXTLLNotification_LayerTrackingStoppedForLayer**
+* Layer starts being monitored: `kNXTLLNotification_LayerTrackingStartedForLayer`
+* Layer stops being monitored: `kNXTLLNotification_LayerTrackingStoppedForLayer`
 
-See the SampleViewController.m file for examples of how to use the layer tracking.
+See the `SampleViewController.m` file for examples of how to use the layer tracking.
 
 ## Requirements
 
-* Xcode and the iOS SDK (download [here](https://developer.apple.com/xcode/))
+* Xcode and the iOS SDK (download [here](https://developer.apple.com/xcode/downloads/))
 * ArcGIS Runtime SDK for iOS 10.1.1 or later (download [here](http://www.esri.com/apps/products/download/index.cfm?fuseaction=download.all#ArcGIS_Runtime_SDK_for_iOS))
 
 ## Resources
