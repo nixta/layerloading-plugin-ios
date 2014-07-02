@@ -40,14 +40,14 @@
 		D99936EB169F4C3A0030586D /* AGSMapView+NXTLayerLoading.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AGSMapView+NXTLayerLoading.m"; sourceTree = "<group>"; };
 		D99936F0169F5BFD0030586D /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
 		D99936F2169F5C210030586D /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
-		E169807616387B6C00A1F2E5 /* arcgis-layerloading-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "arcgis-layerloading-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E169807616387B6C00A1F2E5 /* layerloading-plugin-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "layerloading-plugin-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E169807A16387B6C00A1F2E5 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		E169807C16387B6C00A1F2E5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		E169807E16387B6C00A1F2E5 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		E169808216387B6C00A1F2E5 /* arcgis-layerloading-ios-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "arcgis-layerloading-ios-Info.plist"; sourceTree = "<group>"; };
+		E169808216387B6C00A1F2E5 /* layerloading-plugin-ios-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "layerloading-plugin-ios-Info.plist"; sourceTree = "<group>"; };
 		E169808416387B6C00A1F2E5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		E169808616387B6C00A1F2E5 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		E169808816387B6C00A1F2E5 /* arcgis-layerloading-ios-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "arcgis-layerloading-ios-Prefix.pch"; sourceTree = "<group>"; };
+		E169808816387B6C00A1F2E5 /* layerloading-plugin-ios-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "layerloading-plugin-ios-Prefix.pch"; sourceTree = "<group>"; };
 		E169808916387B6C00A1F2E5 /* SampleAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SampleAppDelegate.h; sourceTree = "<group>"; };
 		E169808A16387B6C00A1F2E5 /* SampleAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SampleAppDelegate.m; sourceTree = "<group>"; };
 		E169808C16387B6C00A1F2E5 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
@@ -118,7 +118,7 @@
 		E169806B16387B6C00A1F2E5 = {
 			isa = PBXGroup;
 			children = (
-				E169808016387B6C00A1F2E5 /* arcgis-layerloading-ios */,
+				E169808016387B6C00A1F2E5 /* layerloading-plugin-ios */,
 				E169807916387B6C00A1F2E5 /* Frameworks */,
 				E169807716387B6C00A1F2E5 /* Products */,
 			);
@@ -127,7 +127,7 @@
 		E169807716387B6C00A1F2E5 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E169807616387B6C00A1F2E5 /* arcgis-layerloading-ios.app */,
+				E169807616387B6C00A1F2E5 /* layerloading-plugin-ios.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -151,23 +151,23 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		E169808016387B6C00A1F2E5 /* arcgis-layerloading-ios */ = {
+		E169808016387B6C00A1F2E5 /* layerloading-plugin-ios */ = {
 			isa = PBXGroup;
 			children = (
 				D99936E6169F47670030586D /* NXTLayerLoading */,
 				D9205AAD16A5DBD500609C25 /* Sample App */,
 			);
-			path = "arcgis-layerloading-ios";
+			path = "layerloading-plugin-ios";
 			sourceTree = "<group>";
 		};
 		E169808116387B6C00A1F2E5 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
 				E16980B216387C5500A1F2E5 /* ArcGIS.bundle */,
-				E169808216387B6C00A1F2E5 /* arcgis-layerloading-ios-Info.plist */,
+				E169808216387B6C00A1F2E5 /* layerloading-plugin-ios-Info.plist */,
 				E169808316387B6C00A1F2E5 /* InfoPlist.strings */,
 				E169808616387B6C00A1F2E5 /* main.m */,
-				E169808816387B6C00A1F2E5 /* arcgis-layerloading-ios-Prefix.pch */,
+				E169808816387B6C00A1F2E5 /* layerloading-plugin-ios-Prefix.pch */,
 				E169808C16387B6C00A1F2E5 /* Default.png */,
 				E169808E16387B6C00A1F2E5 /* Default@2x.png */,
 				E169809016387B6C00A1F2E5 /* Default-568h@2x.png */,
@@ -178,9 +178,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		E169807516387B6C00A1F2E5 /* arcgis-layerloading-ios */ = {
+		E169807516387B6C00A1F2E5 /* layerloading-plugin-ios */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E169809D16387B6C00A1F2E5 /* Build configuration list for PBXNativeTarget "arcgis-layerloading-ios" */;
+			buildConfigurationList = E169809D16387B6C00A1F2E5 /* Build configuration list for PBXNativeTarget "layerloading-plugin-ios" */;
 			buildPhases = (
 				E169807216387B6C00A1F2E5 /* Sources */,
 				E169807316387B6C00A1F2E5 /* Frameworks */,
@@ -190,9 +190,9 @@
 			);
 			dependencies = (
 			);
-			name = "arcgis-layerloading-ios";
+			name = "layerloading-plugin-ios";
 			productName = Demo1;
-			productReference = E169807616387B6C00A1F2E5 /* arcgis-layerloading-ios.app */;
+			productReference = E169807616387B6C00A1F2E5 /* layerloading-plugin-ios.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -205,7 +205,7 @@
 				LastUpgradeCheck = 0450;
 				ORGANIZATIONNAME = Esri;
 			};
-			buildConfigurationList = E169807016387B6C00A1F2E5 /* Build configuration list for PBXProject "arcgis-layerloading-ios" */;
+			buildConfigurationList = E169807016387B6C00A1F2E5 /* Build configuration list for PBXProject "layerloading-plugin-ios" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -217,7 +217,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				E169807516387B6C00A1F2E5 /* arcgis-layerloading-ios */,
+				E169807516387B6C00A1F2E5 /* layerloading-plugin-ios */,
 			);
 		};
 /* End PBXProject section */
@@ -347,8 +347,8 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "$(HOME)/Library/SDKs/ArcGIS/iOS/**";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "arcgis-layerloading-ios/Sample App/arcgis-layerloading-ios-Prefix.pch";
-				INFOPLIST_FILE = "arcgis-layerloading-ios/Sample App/arcgis-layerloading-ios-Info.plist";
+				GCC_PREFIX_HEADER = "layerloading-plugin-ios/Sample App/layerloading-plugin-ios-Prefix.pch";
+				INFOPLIST_FILE = "layerloading-plugin-ios/Sample App/layerloading-plugin-ios-Info.plist";
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -356,7 +356,7 @@
 					"-framework",
 					ArcGIS,
 				);
-				PRODUCT_NAME = "arcgis-layerloading-ios";
+				PRODUCT_NAME = "layerloading-plugin-ios";
 				VALID_ARCHS = armv7;
 				WRAPPER_EXTENSION = app;
 			};
@@ -367,15 +367,15 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "$(HOME)/Library/SDKs/ArcGIS/iOS/**";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "arcgis-layerloading-ios/Sample App/arcgis-layerloading-ios-Prefix.pch";
-				INFOPLIST_FILE = "arcgis-layerloading-ios/Sample App/arcgis-layerloading-ios-Info.plist";
+				GCC_PREFIX_HEADER = "layerloading-plugin-ios/Sample App/layerloading-plugin-ios-Prefix.pch";
+				INFOPLIST_FILE = "layerloading-plugin-ios/Sample App/layerloading-plugin-ios-Info.plist";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",
 					"-framework",
 					ArcGIS,
 				);
-				PRODUCT_NAME = "arcgis-layerloading-ios";
+				PRODUCT_NAME = "layerloading-plugin-ios";
 				VALID_ARCHS = armv7;
 				WRAPPER_EXTENSION = app;
 			};
@@ -384,7 +384,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		E169807016387B6C00A1F2E5 /* Build configuration list for PBXProject "arcgis-layerloading-ios" */ = {
+		E169807016387B6C00A1F2E5 /* Build configuration list for PBXProject "layerloading-plugin-ios" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E169809B16387B6C00A1F2E5 /* Debug */,
@@ -393,7 +393,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E169809D16387B6C00A1F2E5 /* Build configuration list for PBXNativeTarget "arcgis-layerloading-ios" */ = {
+		E169809D16387B6C00A1F2E5 /* Build configuration list for PBXNativeTarget "layerloading-plugin-ios" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E169809E16387B6C00A1F2E5 /* Debug */,

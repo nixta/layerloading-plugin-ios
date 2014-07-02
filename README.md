@@ -5,7 +5,7 @@ A sample framework to add notifications to show when layers in an [`AGSMapView`]
 
 AGSMapView is a component of Esri's [ArcGIS Runtime SDK for iOS](http://resources.arcgis.com/en/help/runtime-ios-sdk/concepts/#//00pw00000003000000).
 
-![App](https://raw.github.com/nixta/arcgis-layerloading-ios/master/arcgis-layerloading-ios.jpg)
+![App](layerloading-plugin-ios.jpg)
 
 ## Features
 * Provides notifications from each `AGSLayer` when it starts/stops loading.

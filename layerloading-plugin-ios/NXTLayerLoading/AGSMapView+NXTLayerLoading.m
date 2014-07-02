@@ -60,18 +60,18 @@
 {
     if (self.nxtll_autoTrackLayers)
     {
-//        NSLog(@"Add: %@", mapLayer.name);
         [mapLayer nxtll_startTracking];
     }
     
+    // Call the original addMapLayer (which will by now be known as nxtll_addMapLayer)
     [self nxtll_addMapLayer:mapLayer];
 }
 
 -(void)nxtll_removeMapLayer:(AGSLayer *)mapLayer
 {
-//    NSLog(@"Remove: %@", mapLayer.name);
     [mapLayer nxtll_stopTracking];
     
+    // Call the original removeMapLayer (which will by now be known as nxtll_removeMapLayer)
     [self nxtll_removeMapLayer:mapLayer];
 }
 @end
