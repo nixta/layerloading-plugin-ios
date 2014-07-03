@@ -21,6 +21,7 @@ NSString *const kNXTLLNotification_LayerTrackingStoppedForLayer = @"NXTLLLayerTr
 @end
 
 @implementation AGSLayer (NXTLayerLoading)
+#pragma mark - Tracking Properties
 -(BOOL)nxtll_isTracking
 {
     NSNumber *temp = objc_getAssociatedObject(self, kNXTLL_LayerIsTrackingKey);
@@ -47,10 +48,12 @@ NSString *const kNXTLLNotification_LayerTrackingStoppedForLayer = @"NXTLLLayerTr
     }
 }
 
+#pragma mark - Tracking Control
 -(void)nxtll_startTracking
 {
     if ([self isKindOfClass:[AGSFeatureLayer class]])
     {
+        // Feature Layer
         AGSFeatureLayer *fl = (AGSFeatureLayer *)self;
         
         [fl addObserver:self
@@ -62,6 +65,7 @@ NSString *const kNXTLLNotification_LayerTrackingStoppedForLayer = @"NXTLLLayerTr
     }
     else if ([self respondsToSelector:@selector(queue)])
     {
+        // Tiled Layer
         NSOperationQueue *q = [(id)self queue];
         
         [q addObserver:self
@@ -114,6 +118,7 @@ NSString *const kNXTLLNotification_LayerTrackingStoppedForLayer = @"NXTLLLayerTr
     self.nxtll_isTracking = NO;
 }
 
+#pragma mark - Tracking Logic
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     if ([object isKindOfClass:[NSOperationQueue class]] &&
@@ -123,7 +128,7 @@ NSString *const kNXTLLNotification_LayerTrackingStoppedForLayer = @"NXTLLLayerTr
         NSInteger newCount = [(NSNumber *)[change objectForKey:NSKeyValueChangeNewKey] integerValue];
         if ([change objectForKey:NSKeyValueChangeOldKey] == nil)
         {
-            // Layer just getting set up.
+            // OldKey was nil: Layer just getting set up.
             if (newCount > 0)
             {
                 NSLog(@"Unexpected start to layer load");
@@ -132,12 +137,12 @@ NSString *const kNXTLLNotification_LayerTrackingStoppedForLayer = @"NXTLLLayerTr
         }
         else
         {
-            // Layer is changing its operation count...
+            // OldKey was not nil: Layer is changing its operation count...
             NSInteger oldCount = [(NSNumber *)[change objectForKey:NSKeyValueChangeOldKey] integerValue];
             
             if (oldCount == 0 && newCount > 0)
             {
-                ///Just started loading
+                // Just started loading
                 [self nxtll_layerLoading];
             }
             else if (oldCount > 0 && newCount == 0)
@@ -201,6 +206,7 @@ NSString *const kNXTLLNotification_LayerTrackingStoppedForLayer = @"NXTLLLayerTr
     }
 }
 
+#pragma mark - Notification Generation
 -(void)nxtll_layerLoading
 {
     dispatch_async(dispatch_get_main_queue(), ^{

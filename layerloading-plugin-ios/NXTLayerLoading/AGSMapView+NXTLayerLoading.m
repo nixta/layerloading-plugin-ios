@@ -15,6 +15,7 @@
 #define kNXTLLAutoTrackLayersDefault YES
 
 @implementation AGSMapView (NXTLayerLoading)
+#pragma mark - Initialization
 +(void)load
 {
     // Swap some methods around...
@@ -30,6 +31,7 @@
     method_exchangeImplementations(a, b);
 }
 
+#pragma mark - Tracking Control Property
 -(BOOL)nxtll_autoTrackLayers
 {
     NSNumber *temp = objc_getAssociatedObject(self, kNXTLLAutoTrackLayersKey);
@@ -56,6 +58,7 @@
     }
 }
 
+#pragma mark - Replacement (swizzled) methods
 -(void)nxtll_addMapLayer:(AGSLayer *)mapLayer
 {
     if (self.nxtll_autoTrackLayers)
