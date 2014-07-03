@@ -61,20 +61,20 @@
 #pragma mark - Replacement (swizzled) methods
 -(void)nxtll_addMapLayer:(AGSLayer *)mapLayer
 {
+    // Call the original addMapLayer (which will by now be known as nxtll_addMapLayer)
+    [self nxtll_addMapLayer:mapLayer];
+
     if (self.nxtll_autoTrackLayers)
     {
         [mapLayer nxtll_startTracking];
     }
-    
-    // Call the original addMapLayer (which will by now be known as nxtll_addMapLayer)
-    [self nxtll_addMapLayer:mapLayer];
 }
 
 -(void)nxtll_removeMapLayer:(AGSLayer *)mapLayer
 {
-    [mapLayer nxtll_stopTracking];
-    
     // Call the original removeMapLayer (which will by now be known as nxtll_removeMapLayer)
     [self nxtll_removeMapLayer:mapLayer];
+
+    [mapLayer nxtll_stopTracking];
 }
 @end

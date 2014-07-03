@@ -14,34 +14,35 @@
 #define kWebMapID @"45895faa12ec4800a681df0b21d11564" // Hurricane Sandy evac layers
 //#define kWebMapID @"a0cdf35893e3467798a0d6a9a8447d8b" // DSEU iOS Session Demo WebMap
 
-@interface SampleViewController () <AGSWebMapDelegate>
+@interface SampleViewController () <AGSWebMapDelegate, UITableViewDataSource, UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet AGSMapView *mapView;
 @property (nonatomic, retain) AGSWebMap *webMap;
 
-@property (nonatomic, retain) NSMutableSet *trackedLayers;
+@property (nonatomic, retain) NSMutableArray *trackedLayers;
 @property (nonatomic, retain) NSMutableSet *loadingLayers;
-@property (weak, nonatomic) IBOutlet UILabel *trackingLabel;
+
+@property (weak, nonatomic) IBOutlet UITableView *layerTableView;
+
+@property (nonatomic, strong) UIColor *loadingColor;
+@property (nonatomic, strong) UIColor *loadedColor;
+@property (nonatomic, strong) UIColor *outOfRangeColor;
 @end
 
 @implementation SampleViewController
-
-- (void)viewDidLoad
+#pragma mark - UIView Load and map setup
+-(void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
-    self.trackedLayers = [NSMutableSet set];
+    self.trackedLayers = [NSMutableArray array];
     self.loadingLayers = [NSMutableSet set];
-	
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(layerLoading:)
-                                                 name:kNXTLLNotification_LayerLoading
-                                               object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(layerLoaded:)
-                                                 name:kNXTLLNotification_LayerLoaded
-                                               object:nil];
     
+    self.loadingColor = [UIColor colorWithRed:0.849 green:0.385 blue:0.427 alpha:1];
+    self.loadedColor = [UIColor colorWithRed:0.349 green:0.701 blue:0.325 alpha:1];
+    self.outOfRangeColor = [UIColor whiteColor];
+
+	// Find out when layers are being tracked
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(layerBeingTracked:)
                                                  name:kNXTLLNotification_LayerTrackingStartedForLayer
@@ -51,13 +52,31 @@
                                                  name:kNXTLLNotification_LayerTrackingStoppedForLayer
                                                object:nil];
     
-    [self updateLoadingUI];
-
+    // Find out when they start and stop loading data
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(layerLoading:)
+                                                 name:kNXTLLNotification_LayerLoading
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(layerLoaded:)
+                                                 name:kNXTLLNotification_LayerLoaded
+                                               object:nil];
+    
+    // Find out when they go in and out of visible scale range
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(layerBecameVisible:)
+                                                 name:kNXTLLNotification_LayerNowInScale
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(layerWentOutOfScaleRange:)
+                                                 name:kNXTLLNotification_LayerNoLongerInScale
+                                               object:nil];
+    
 	[self reloadMap:nil];
 }
 
 // Report an error if the WebMap doesn't load.
-- (void) webMap:(AGSWebMap *)webMap didFailToLoadWithError:(NSError *)error
+-(void)webMap:(AGSWebMap *)webMap didFailToLoadWithError:(NSError *)error
 {
 	[[[UIAlertView alloc] initWithTitle:@"WebMap Error"
 								message:error.localizedDescription
@@ -67,12 +86,44 @@
 	NSLog(@"Couldn't load the WebMap: %@", error);
 }
 
+#pragma mark - NOTIFICATION HANDLERS
+#pragma mark - Layer Tracking
+-(void)layerBeingTracked:(NSNotification *)n
+{
+    AGSLayer *layer = n.object;
+    NSLog(@"  Tracking: %@", layer.name);
+    [self.trackedLayers addObject:layer];
+
+    // Add the layer to the UI to show it being tracked.
+    NSIndexPath *newPath = [NSIndexPath indexPathForRow:self.trackedLayers.count-1 inSection:0];
+    [self.layerTableView insertRowsAtIndexPaths:@[newPath]
+                               withRowAnimation:UITableViewRowAnimationTop];
+    
+    [self updateLayerListTable];
+}
+
+-(void)layerNotBeingTracked:(NSNotification *)n
+{
+    NSUInteger oldIndex = [self.trackedLayers indexOfObject:n.object];
+    if (oldIndex > -1) {
+        AGSLayer *layer = n.object;
+        NSLog(@"  Not Tracking: %@", layer.name);
+        [self.layerTableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:oldIndex inSection:0]]
+                                   withRowAnimation:UITableViewRowAnimationFade];
+        [self.trackedLayers removeObject:layer];
+        [self.loadingLayers removeObject:layer];
+        
+        [self updateLayerListTable];
+    }
+}
+
+#pragma mark - Layer Loading
 -(void)layerLoading:(NSNotification *)n
 {
     AGSLayer *layer = n.object;
     NSLog(@"    Loading: %@", layer.name);
     [self.loadingLayers addObject:layer];
-    [self updateLoadingUI];
+    [self animateCellForLayer:layer toColor:self.loadingColor];
 }
 
 -(void)layerLoaded:(NSNotification *)n
@@ -80,46 +131,27 @@
     AGSLayer *layer = n.object;
     NSLog(@"    Loaded: %@", layer.name);
     [self.loadingLayers removeObject:layer];
-    [self updateLoadingUI];
+    [self animateCellForLayer:layer toColor:self.loadedColor];
 }
 
--(void)layerBeingTracked:(NSNotification *)n
+#pragma mark - Layer Visibility
+-(void)layerBecameVisible:(NSNotification *)n
 {
-    AGSLayer *layer = n.object;
-    NSLog(@"  Tracking: %@", layer.name);
-    [self.trackedLayers addObject:layer];
-    [self updateLoadingUI];
+    NSLog(@"Layer %@ now visible.", ((AGSLayer *)n.object).name);
+    [self setCell:[self cellForLayer:n.object] alpha:1];
 }
 
--(void)layerNotBeingTracked:(NSNotification *)n
+-(void)layerWentOutOfScaleRange:(NSNotification *)n
 {
-    AGSLayer *layer = n.object;
-    NSLog(@"  Not Tracking: %@", layer.name);
-    [self.trackedLayers removeObject:layer];
-    [self.loadingLayers removeObject:layer];
-    [self updateLoadingUI];
+    NSLog(@"Layer %@ no longer visible.", ((AGSLayer *)n.object).name);
+    UITableViewCell *cell = [self cellForLayer:n.object];
+    [self animateCellForLayer:n.object toColor:self.outOfRangeColor];
+    [self setCell:cell alpha:0.35];
 }
 
--(void)updateLoadingUI
-{
-    NSUInteger layersInScale = 0;
-    for (AGSLayer *layer in self.trackedLayers) {
-        if (layer.isInScale)
-        {
-            layersInScale++;
-        }
-    }
-    NSString *feedback = [NSString stringWithFormat:@"%d of %d (%d) layers loading", self.loadingLayers.count, layersInScale, self.trackedLayers.count];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        self.trackingLabel.text = feedback;
-    });
-}
-
-- (IBAction)resetMap:(id)sender {
-    [self.mapView reset];
-}
-
-- (IBAction)reloadMap:(id)sender {
+#pragma mark - USER INTERFACE
+#pragma mark - Map Load/Reload
+-(IBAction)reloadMap:(id)sender {
 	// Create a webmap pointing to our ArcGIS.com resource.
 	self.webMap = [AGSWebMap webMapWithItemId:kWebMapID
 								   credential:nil];
@@ -129,5 +161,54 @@
     
 	// Open the webmap into our AGSMapView
 	[self.webMap openIntoMapView:self.mapView];
+}
+
+#pragma mark - UI Updates
+-(void)updateLayerListTable
+{
+    self.layerTableView.hidden = self.trackedLayers.count == 0;
+    if (!self.layerTableView.hidden) {
+        CGRect newFrame = self.layerTableView.frame;
+        newFrame.size.height = 20*self.trackedLayers.count;
+        [self.layerTableView setFrame:newFrame];
+    }
+}
+
+-(void)setCell:(UITableViewCell *)cell alpha:(double)alpha
+{
+    [UIView animateWithDuration:0.2 animations:^{
+        [cell viewWithTag:100].alpha = alpha;
+    }];
+}
+
+-(void)animateCellForLayer:(AGSLayer *)layer toColor:(UIColor *)targetColor {
+    [UIView animateWithDuration:0.2 animations:^{
+        [self cellForLayer:layer].backgroundColor = targetColor;
+    }];
+}
+
+-(UITableViewCell *)cellForLayer:(AGSLayer *)layer
+{
+    if ([self.trackedLayers containsObject:layer]) {
+        return [self.layerTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:[self.trackedLayers indexOfObject:layer] inSection:0]];
+    }
+    return nil;
+}
+
+#pragma mark - UITableView
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.trackedLayers.count;
+}
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    AGSLayer *layer = self.trackedLayers[indexPath.row];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"mapLayerCell"];
+    UILabel *nameLabel = (UILabel *)[cell viewWithTag:100];
+    nameLabel.text = layer.name;
+    return cell;
 }
 @end

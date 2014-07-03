@@ -10,14 +10,18 @@
 #import <objc/runtime.h>
 
 #define kNXTLL_LayerIsTrackingKey @"NXTLLLayerIsTracking"
+#define kNXTLL_LayerWasInScaleKey @"NXTLLLayerWasInScale"
 
 NSString *const kNXTLLNotification_LayerLoading = @"NXTLLLayerLoading";
 NSString *const kNXTLLNotification_LayerLoaded = @"NXTLLLayerLoaded";
+NSString *const kNXTLLNotification_LayerNoLongerInScale = @"NXTLLLayerNoLongerInScale";
+NSString *const kNXTLLNotification_LayerNowInScale = @"NXTLLLayerNowInScale";
 NSString *const kNXTLLNotification_LayerTrackingStartedForLayer = @"NXTLLLayerTrackingOn";
 NSString *const kNXTLLNotification_LayerTrackingStoppedForLayer = @"NXTLLLayerTrackingOff";
 
 @interface AGSLayer (NXTLayerLoading_Internal)
 @property (nonatomic, assign, readwrite) BOOL nxtll_isTracking;
+@property (nonatomic, assign, readwrite) BOOL nxtll_wasInScale;
 @end
 
 @implementation AGSLayer (NXTLayerLoading)
@@ -41,16 +45,50 @@ NSString *const kNXTLLNotification_LayerTrackingStoppedForLayer = @"NXTLLLayerTr
     if (nxtll_isTracking)
     {
         [[NSNotificationCenter defaultCenter] postNotificationName:kNXTLLNotification_LayerTrackingStartedForLayer object:self];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(nxtll_mapZoomChanged:) name:AGSMapViewDidEndZoomingNotification object:self.mapView];
+        [self nxtll_scaleVisibilityChanged];
     }
     else
     {
         [[NSNotificationCenter defaultCenter] postNotificationName:kNXTLLNotification_LayerTrackingStoppedForLayer object:self];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:AGSMapViewDidEndZoomingNotification object:self.mapView];
+    }
+}
+
+-(BOOL)nxtll_wasInScale
+{
+    NSNumber *temp = objc_getAssociatedObject(self, kNXTLL_LayerWasInScaleKey);
+    if (temp)
+    {
+        return temp.boolValue;
+    }
+    return NO;
+}
+
+-(void)setNxtll_wasInScale:(BOOL)newValue
+{
+    NSNumber *temp = [NSNumber numberWithBool:newValue];
+    
+    objc_setAssociatedObject(self, kNXTLL_LayerWasInScaleKey, temp, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+-(void)nxtll_mapZoomChanged:(NSNotification *)notification
+{
+    [self nxtll_checkInScale];
+}
+
+-(void)nxtll_checkInScale
+{
+    if (self.nxtll_wasInScale != self.isInScale) {
+        [self nxtll_scaleVisibilityChanged];
     }
 }
 
 #pragma mark - Tracking Control
 -(void)nxtll_startTracking
 {
+    self.nxtll_wasInScale = NO;
+    
     if ([self isKindOfClass:[AGSFeatureLayer class]])
     {
         // Feature Layer
@@ -207,6 +245,14 @@ NSString *const kNXTLLNotification_LayerTrackingStoppedForLayer = @"NXTLLLayerTr
 }
 
 #pragma mark - Notification Generation
+-(void)nxtll_scaleVisibilityChanged
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:self.isInScale?kNXTLLNotification_LayerNowInScale:kNXTLLNotification_LayerNoLongerInScale object:self];
+        self.nxtll_wasInScale = self.isInScale;
+    });
+}
+
 -(void)nxtll_layerLoading
 {
     dispatch_async(dispatch_get_main_queue(), ^{
