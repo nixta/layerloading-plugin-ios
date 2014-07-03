@@ -65,11 +65,11 @@
     // Find out when they go in and out of visible scale range
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(layerBecameVisible:)
-                                                 name:kNXTLLNotification_LayerNowInScale
+                                                 name:kNXTLLNotification_LayerNowVisibleByScaleRange
                                                object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(layerWentOutOfScaleRange:)
-                                                 name:kNXTLLNotification_LayerNoLongerInScale
+                                                 name:kNXTLLNotification_LayerNoLongerVisibleByScaleRange
                                                object:nil];
     
 	[self reloadMap:nil];

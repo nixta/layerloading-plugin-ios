@@ -1,9 +1,9 @@
 layerloading-plugin-ios
 ===
 
-A sample framework to add notifications to show when layers in an [`AGSMapView`](https://developers.arcgis.com/ios/api-reference/interface_a_g_s_map_view.html) are loading.
+A sample framework to add notifications to show when layers in an [`AGSMapView`](https://developers.arcgis.com/ios/api-reference/interface_a_g_s_map_view.html) are loading or go in and out of scale visiblity range.
 
-AGSMapView is a component of Esri's [ArcGIS Runtime SDK for iOS](http://resources.arcgis.com/en/help/runtime-ios-sdk/concepts/#//00pw00000003000000).
+AGSMapView is a component of Esri's [ArcGIS Runtime SDK for iOS](https://developers.arcgis.com/ios/guide/introduction.htm).
 
 ![App](layerloading-plugin-ios.jpg)
 
@@ -11,6 +11,7 @@ AGSMapView is a component of Esri's [ArcGIS Runtime SDK for iOS](http://resource
 * Provides notifications from each `AGSLayer` when it starts/stops loading.
 * Automatically start tracking the loading state of layers as they're added to an `AGSMapView`.
 * Disable automatic tracking and allow tracking layers manually (with notifications as tracking starts/stops).
+* Track a layer's visibility according to scale visibility ranges.
 
 ## Getting Started
 Just add the `.m` and `.h` files for the `AGSLayer+NXTLayerLoading` and `AGSMapView+NXTLayerLoading` categories to your project. You don't need to initialize anything. As long as the `.m` files are built as part of your target, the framework is hooked in.
@@ -23,6 +24,10 @@ The `AGSLayer+NXTLayerLoading.h` file defines 4 notifications (whose `object` pr
 * Layer starts loading: `kNXTLLNotification_LayerLoading`
 * Layer finished loading: `kNXTLLNotification_LayerLoaded`
 
+### Layer visibility events:
+* Layer becomes visible: `kNXTLLNotification_LayerNowVisibleByScaleRange`
+* Layer goes out of visibile range: `kNXTLLNotification_LayerNoLongerVisibleByScaleRange`
+
 ### Framework events:
 * Layer starts being monitored: `kNXTLLNotification_LayerTrackingStartedForLayer`
 * Layer stops being monitored: `kNXTLLNotification_LayerTrackingStoppedForLayer`
@@ -32,11 +37,11 @@ See the `SampleViewController.m` file for examples of how to use the layer track
 ## Requirements
 
 * Xcode and the iOS SDK (download [here](https://developer.apple.com/xcode/downloads/))
-* ArcGIS Runtime SDK for iOS 10.1.1 or later (download [here](http://www.esri.com/apps/products/download/index.cfm?fuseaction=download.all#ArcGIS_Runtime_SDK_for_iOS))
+* ArcGIS Runtime SDK for iOS 10.1.1 or later (download [here](https://developers.arcgis.com/en/downloads/))
 
 ## Resources
 
-* [ArcGIS Runtime SDK for iOS Resource Center](http://resources.arcgis.com/en/help/runtime-ios-sdk/concepts/#//00pw00000003000000)
+* [ArcGIS Runtime SDK for iOS Resource Center](https://developers.arcgis.com/ios/guide/introduction.htm)
 * [ArcGIS Runtime SDK Forums](http://forums.arcgis.com/forums/78-ArcGIS-Runtime-SDK-for-iOS)
 * [ArcGIS Blog](http://blogs.esri.com/esri/arcgis/)
 * Twitter [@esri](http://twitter.com/esri)
@@ -51,7 +56,7 @@ Find a bug or want to request a new feature?  Please let me know by submitting a
 Anyone and everyone is welcome to contribute. 
 
 ## Licensing
-Copyright 2012 Nick Furness
+Copyright 2014 Nick Furness
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -65,4 +70,4 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-A copy of the license is available in the repository's [license.txt](https://raw.github.com/nixta/arcgis-layerloading-ios/master/license.txt) file.
+A copy of the license is available in the repository's [license.txt](license.txt) file.

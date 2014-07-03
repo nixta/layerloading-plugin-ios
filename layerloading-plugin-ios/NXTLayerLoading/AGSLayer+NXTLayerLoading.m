@@ -14,8 +14,8 @@
 
 NSString *const kNXTLLNotification_LayerLoading = @"NXTLLLayerLoading";
 NSString *const kNXTLLNotification_LayerLoaded = @"NXTLLLayerLoaded";
-NSString *const kNXTLLNotification_LayerNoLongerInScale = @"NXTLLLayerNoLongerInScale";
-NSString *const kNXTLLNotification_LayerNowInScale = @"NXTLLLayerNowInScale";
+NSString *const kNXTLLNotification_LayerNoLongerVisibleByScaleRange = @"NXTLLLayerNoLongerInScale";
+NSString *const kNXTLLNotification_LayerNowVisibleByScaleRange = @"NXTLLLayerNowInScale";
 NSString *const kNXTLLNotification_LayerTrackingStartedForLayer = @"NXTLLLayerTrackingOn";
 NSString *const kNXTLLNotification_LayerTrackingStoppedForLayer = @"NXTLLLayerTrackingOff";
 
@@ -248,7 +248,7 @@ NSString *const kNXTLLNotification_LayerTrackingStoppedForLayer = @"NXTLLLayerTr
 -(void)nxtll_scaleVisibilityChanged
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [[NSNotificationCenter defaultCenter] postNotificationName:self.isInScale?kNXTLLNotification_LayerNowInScale:kNXTLLNotification_LayerNoLongerInScale object:self];
+        [[NSNotificationCenter defaultCenter] postNotificationName:self.isInScale?kNXTLLNotification_LayerNowVisibleByScaleRange:kNXTLLNotification_LayerNoLongerVisibleByScaleRange object:self];
         self.nxtll_wasInScale = self.isInScale;
     });
 }
