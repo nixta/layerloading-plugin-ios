@@ -72,6 +72,7 @@
                                                  name:kNXTLLNotification_LayerNoLongerVisibleByScaleRange
                                                object:nil];
     
+    
 	[self reloadMap:nil];
 }
 
@@ -104,16 +105,15 @@
 
 -(void)layerNotBeingTracked:(NSNotification *)n
 {
-    NSUInteger oldIndex = [self.trackedLayers indexOfObject:n.object];
+    NSInteger oldIndex = [self.trackedLayers indexOfObject:n.object];
     if (oldIndex > -1) {
         AGSLayer *layer = n.object;
         NSLog(@"  Not Tracking: %@", layer.name);
-        [self.layerTableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:oldIndex inSection:0]]
-                                   withRowAnimation:UITableViewRowAnimationFade];
         [self.trackedLayers removeObject:layer];
         [self.loadingLayers removeObject:layer];
-        
-        [self updateLayerListTable];
+
+        [self.layerTableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:oldIndex inSection:0]]
+                                   withRowAnimation:UITableViewRowAnimationTop];
     }
 }
 
@@ -153,8 +153,7 @@
 #pragma mark - Map Load/Reload
 -(IBAction)reloadMap:(id)sender {
 	// Create a webmap pointing to our ArcGIS.com resource.
-	self.webMap = [AGSWebMap webMapWithItemId:kWebMapID
-								   credential:nil];
+	self.webMap = [AGSWebMap webMapWithItemId:kWebMapID credential:nil];
 
 	// Set the delegate so we'll know when things fail or succeed
 	self.webMap.delegate = self;
@@ -210,5 +209,10 @@
     UILabel *nameLabel = (UILabel *)[cell viewWithTag:100];
     nameLabel.text = layer.name;
     return cell;
+}
+
+#pragma mark - Status Bar
+-(BOOL)prefersStatusBarHidden {
+    return YES;
 }
 @end

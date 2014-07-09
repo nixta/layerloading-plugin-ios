@@ -107,10 +107,10 @@
 		D99936E6169F47670030586D /* NXTLayerLoading */ = {
 			isa = PBXGroup;
 			children = (
-				D99936EA169F4C3A0030586D /* AGSMapView+NXTLayerLoading.h */,
-				D99936EB169F4C3A0030586D /* AGSMapView+NXTLayerLoading.m */,
 				D9205AAA16A5CEB300609C25 /* AGSLayer+NXTLayerLoading.h */,
 				D9205AAB16A5CEB300609C25 /* AGSLayer+NXTLayerLoading.m */,
+				D99936EA169F4C3A0030586D /* AGSMapView+NXTLayerLoading.h */,
+				D99936EB169F4C3A0030586D /* AGSMapView+NXTLayerLoading.m */,
 			);
 			path = NXTLayerLoading;
 			sourceTree = "<group>";
