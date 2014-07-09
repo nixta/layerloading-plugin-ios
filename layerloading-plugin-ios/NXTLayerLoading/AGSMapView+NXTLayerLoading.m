@@ -18,17 +18,20 @@
 #pragma mark - Initialization
 +(void)load
 {
-    // Swap some methods around...
-    Class swap = [self class];
-    Method a = nil; Method b = nil;
-
-    a = class_getInstanceMethod(swap, @selector(addMapLayer:));
-    b = class_getInstanceMethod(swap, @selector(nxtll_addMapLayer:));
-    method_exchangeImplementations(a, b);
-
-    a = class_getInstanceMethod(swap, @selector(removeMapLayer:));
-    b = class_getInstanceMethod(swap, @selector(nxtll_removeMapLayer:));
-    method_exchangeImplementations(a, b);
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        // Swap some methods around...
+        Class swap = [self class];
+        Method a = nil; Method b = nil;
+        
+        a = class_getInstanceMethod(swap, @selector(addMapLayer:));
+        b = class_getInstanceMethod(swap, @selector(nxtll_addMapLayer:));
+        method_exchangeImplementations(a, b);
+        
+        a = class_getInstanceMethod(swap, @selector(removeMapLayer:));
+        b = class_getInstanceMethod(swap, @selector(nxtll_removeMapLayer:));
+        method_exchangeImplementations(a, b);
+    });
 }
 
 #pragma mark - Tracking Control Property
