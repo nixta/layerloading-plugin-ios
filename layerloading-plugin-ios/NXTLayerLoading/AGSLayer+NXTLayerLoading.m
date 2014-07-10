@@ -9,15 +9,19 @@
 #import "AGSLayer+NXTLayerLoading.h"
 #import <objc/runtime.h>
 
-#define kNXTLL_LayerIsTrackingKey @"NXTLLLayerIsTracking"
-#define kNXTLL_LayerWasInScaleKey @"NXTLLLayerWasInScale"
+#define kLL_LayerIsTrackingKey @"NXTLLLayerIsTracking"
+#define kLL_LayerWasInScaleKey @"NXTLLLayerWasInScale"
 
-NSString *const kNXTLLNotification_LayerLoading = @"NXTLLLayerLoading";
-NSString *const kNXTLLNotification_LayerLoaded = @"NXTLLLayerLoaded";
+#define kFeatureLayerTrackingQueryOpKey    @"queryOperation"
+#define kFeatureLayerTrackingConnectionKey @"connection"
+#define kTiledLayerTrackingQueueCountKey   @"queue.operationCount"
+
+NSString *const kNXTLLNotification_LayerLoading                     = @"NXTLLLayerLoading";
+NSString *const kNXTLLNotification_LayerLoaded                      = @"NXTLLLayerLoaded";
 NSString *const kNXTLLNotification_LayerNoLongerVisibleByScaleRange = @"NXTLLLayerNoLongerInScale";
-NSString *const kNXTLLNotification_LayerNowVisibleByScaleRange = @"NXTLLLayerNowInScale";
-NSString *const kNXTLLNotification_LayerTrackingStartedForLayer = @"NXTLLLayerTrackingOn";
-NSString *const kNXTLLNotification_LayerTrackingStoppedForLayer = @"NXTLLLayerTrackingOff";
+NSString *const kNXTLLNotification_LayerNowVisibleByScaleRange      = @"NXTLLLayerNowInScale";
+NSString *const kNXTLLNotification_LayerTrackingStartedForLayer     = @"NXTLLLayerTrackingOn";
+NSString *const kNXTLLNotification_LayerTrackingStoppedForLayer     = @"NXTLLLayerTrackingOff";
 
 @interface AGSLayer (NXTLayerLoading_Internal)
 @property (nonatomic, assign, readwrite) BOOL nxtll_isTracking;
@@ -28,7 +32,7 @@ NSString *const kNXTLLNotification_LayerTrackingStoppedForLayer = @"NXTLLLayerTr
 #pragma mark - Tracking Properties
 -(BOOL)nxtll_isTracking
 {
-    NSNumber *temp = objc_getAssociatedObject(self, kNXTLL_LayerIsTrackingKey);
+    NSNumber *temp = objc_getAssociatedObject(self, kLL_LayerIsTrackingKey);
     if (temp)
     {
         return temp.boolValue;
@@ -40,7 +44,7 @@ NSString *const kNXTLLNotification_LayerTrackingStoppedForLayer = @"NXTLLLayerTr
 {
     NSNumber *temp = [NSNumber numberWithBool:nxtll_isTracking];
     
-    objc_setAssociatedObject(self, kNXTLL_LayerIsTrackingKey, temp, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, kLL_LayerIsTrackingKey, temp, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 
     if (nxtll_isTracking)
     {
@@ -57,7 +61,7 @@ NSString *const kNXTLLNotification_LayerTrackingStoppedForLayer = @"NXTLLLayerTr
 
 -(BOOL)nxtll_wasInScale
 {
-    NSNumber *temp = objc_getAssociatedObject(self, kNXTLL_LayerWasInScaleKey);
+    NSNumber *temp = objc_getAssociatedObject(self, kLL_LayerWasInScaleKey);
     if (temp)
     {
         return temp.boolValue;
@@ -69,7 +73,7 @@ NSString *const kNXTLLNotification_LayerTrackingStoppedForLayer = @"NXTLLLayerTr
 {
     NSNumber *temp = [NSNumber numberWithBool:newValue];
     
-    objc_setAssociatedObject(self, kNXTLL_LayerWasInScaleKey, temp, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, kLL_LayerWasInScaleKey, temp, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 -(void)nxtll_mapZoomChanged:(NSNotification *)notification
@@ -95,7 +99,7 @@ NSString *const kNXTLLNotification_LayerTrackingStoppedForLayer = @"NXTLLLayerTr
         AGSFeatureLayer *fl = (AGSFeatureLayer *)self;
         
         [fl addObserver:self
-             forKeyPath:@"queryOperation"
+             forKeyPath:kFeatureLayerTrackingQueryOpKey
                 options:NSKeyValueObservingOptionNew + NSKeyValueObservingOptionInitial + NSKeyValueObservingOptionOld
                 context:nil];
         
@@ -104,10 +108,8 @@ NSString *const kNXTLLNotification_LayerTrackingStoppedForLayer = @"NXTLLLayerTr
     else if ([self respondsToSelector:@selector(queue)])
     {
         // Tiled Layer
-        NSOperationQueue *q = [(id)self queue];
-        
-        [q addObserver:self
-            forKeyPath:@"operationCount"
+        [self addObserver:self
+            forKeyPath:kTiledLayerTrackingQueueCountKey
                options:NSKeyValueObservingOptionNew + NSKeyValueObservingOptionInitial + NSKeyValueObservingOptionOld
                context:nil];
 
@@ -136,16 +138,14 @@ NSString *const kNXTLLNotification_LayerTrackingStoppedForLayer = @"NXTLLLayerTr
             // it's nulling the iVar rather than nulling the property, and so bypassing KVO.
             //
             // Just a hunch.
-            [qOp removeObserver:self forKeyPath:@"connection"];
+            [qOp removeObserver:self forKeyPath:kFeatureLayerTrackingConnectionKey];
         }
         
-        [self removeObserver:self forKeyPath:@"queryOperation"];
+        [self removeObserver:self forKeyPath:kFeatureLayerTrackingQueryOpKey];
     }
     else if ([self respondsToSelector:@selector(queue)])
     {
-        NSOperationQueue *q = [(id)self queue];
-        
-        [q removeObserver:self forKeyPath:@"operationCount"];
+        [self removeObserver:self forKeyPath:kTiledLayerTrackingQueueCountKey];
     }
     else
     {
@@ -159,8 +159,7 @@ NSString *const kNXTLLNotification_LayerTrackingStoppedForLayer = @"NXTLLLayerTr
 #pragma mark - Tracking Logic
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    if ([object isKindOfClass:[NSOperationQueue class]] &&
-        [keyPath isEqualToString:@"operationCount"])
+    if ([keyPath isEqualToString:kTiledLayerTrackingQueueCountKey])
     {
         // This is either an AGSDynamicLayer or an AGSTiledLayer
         NSInteger newCount = [(NSNumber *)[change objectForKey:NSKeyValueChangeNewKey] integerValue];
@@ -190,8 +189,7 @@ NSString *const kNXTLLNotification_LayerTrackingStoppedForLayer = @"NXTLLLayerTr
             }
         }
     }
-    else if ([object isKindOfClass:[AGSFeatureLayer class]] &&
-             [keyPath isEqualToString:@"queryOperation"])
+    else if ([keyPath isEqualToString:kFeatureLayerTrackingQueryOpKey])
     {
         // The following is based off observation and experiment. It could be incomplete:
         //
@@ -199,30 +197,30 @@ NSString *const kNXTLLNotification_LayerTrackingStoppedForLayer = @"NXTLLLayerTr
         // The queryOperation is nil unless the featurelayer is getting ready to ask
         // for more features. When it actually asks for more, it'll set it's connection
         // property to non-nil, so we'll watch for that.
-        NSOperation *oldQO = [change objectForKey:NSKeyValueChangeOldKey];
-        NSOperation *newQO = [change objectForKey:NSKeyValueChangeNewKey];
-        if (oldQO != newQO)
+        NSOperation *oldQueryOperation = [change objectForKey:NSKeyValueChangeOldKey];
+        NSOperation *newQueryOperation = [change objectForKey:NSKeyValueChangeNewKey];
+        if (oldQueryOperation != newQueryOperation)
         {
-            if (oldQO != nil &&
-                oldQO != (id)[NSNull null])
+            if (oldQueryOperation != nil &&
+                oldQueryOperation != (id)[NSNull null])
             {
                 // The queryOperation is being nilled, so let's stop observing it's connection.
-                [oldQO removeObserver:self forKeyPath:@"connection"];
+                [oldQueryOperation removeObserver:self forKeyPath:kFeatureLayerTrackingConnectionKey];
             }
             
-            if (newQO != nil &&
-                newQO != (id)[NSNull null])
+            if (newQueryOperation != nil &&
+                newQueryOperation != (id)[NSNull null])
             {
                 // A new queryOperation exists, so let's *start* watching its connection.
-                [newQO addObserver:self
-                        forKeyPath:@"connection"
+                [newQueryOperation addObserver:self
+                        forKeyPath:kFeatureLayerTrackingConnectionKey
                            options:NSKeyValueObservingOptionNew + NSKeyValueObservingOptionInitial + NSKeyValueObservingOptionOld
                            context:nil];
                 // Note, this doesn't mean it's loading yet, just that it's getting ready to load...
             }
         }
     }
-    else if ([keyPath isEqualToString:@"connection"])
+    else if ([keyPath isEqualToString:kFeatureLayerTrackingConnectionKey])
     {
         // This is the connection on the queryOperation subclass.
         NSURLConnection *oldConnection = [change objectForKey:NSKeyValueChangeOldKey];
@@ -231,6 +229,7 @@ NSString *const kNXTLLNotification_LayerTrackingStoppedForLayer = @"NXTLLLayerTr
         if (newConnection != nil &&
             newConnection != (id)[NSNull null])
         {
+            // Went from Not Loading to Loading
             [self nxtll_layerLoading];
         }
         else
@@ -238,6 +237,7 @@ NSString *const kNXTLLNotification_LayerTrackingStoppedForLayer = @"NXTLLLayerTr
             if (oldConnection &&
                 oldConnection != (id)[NSNull null])
             {
+                // Went from Loading to Not Loading (aka Loaded)
                 [self nxtll_layerLoaded];
             }
         }

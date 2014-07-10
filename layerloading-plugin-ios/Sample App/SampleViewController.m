@@ -10,6 +10,7 @@
 #import <ArcGIS/ArcGIS.h>
 #import "AGSLayer+NXTLayerLoading.h"
 #import "AGSMapView+NXTLayerLoading.h"
+#import "NSObject+NFNotificationsProvider.h"
 
 #define kWebMapID @"45895faa12ec4800a681df0b21d11564" // Hurricane Sandy evac layers
 //#define kWebMapID @"a0cdf35893e3467798a0d6a9a8447d8b" // DSEU iOS Session Demo WebMap
@@ -42,36 +43,14 @@
     self.loadedColor = [UIColor colorWithRed:0.349 green:0.701 blue:0.325 alpha:1];
     self.outOfRangeColor = [UIColor whiteColor];
 
-	// Find out when layers are being tracked
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(layerBeingTracked:)
-                                                 name:kNXTLLNotification_LayerTrackingStartedForLayer
-                                               object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(layerNotBeingTracked:)
-                                                 name:kNXTLLNotification_LayerTrackingStoppedForLayer
-                                               object:nil];
-    
-    // Find out when they start and stop loading data
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(layerLoading:)
-                                                 name:kNXTLLNotification_LayerLoading
-                                               object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(layerLoaded:)
-                                                 name:kNXTLLNotification_LayerLoaded
-                                               object:nil];
-    
-    // Find out when they go in and out of visible scale range
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(layerBecameVisible:)
-                                                 name:kNXTLLNotification_LayerNowVisibleByScaleRange
-                                               object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(layerWentOutOfScaleRange:)
-                                                 name:kNXTLLNotification_LayerNoLongerVisibleByScaleRange
-                                               object:nil];
-    
+    [self registerAsListenerForNotifications:@{
+        kNXTLLNotification_LayerTrackingStartedForLayer     : strSelector(layerBeingTracked:),
+        kNXTLLNotification_LayerTrackingStoppedForLayer     : strSelector(layerNotBeingTracked:),
+        kNXTLLNotification_LayerLoading                     : strSelector(layerLoading:),
+        kNXTLLNotification_LayerLoaded                      : strSelector(layerLoaded:),
+        kNXTLLNotification_LayerNowVisibleByScaleRange      : strSelector(layerBecameVisible:),
+        kNXTLLNotification_LayerNoLongerVisibleByScaleRange : strSelector(layerWentOutOfScaleRange:)
+    } onObjectOrObjects:nil];
     
 	[self reloadMap:nil];
 }
