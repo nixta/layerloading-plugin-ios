@@ -8,8 +8,8 @@
 
 #import "SampleViewController.h"
 #import <ArcGIS/ArcGIS.h>
-#import "AGSLayer+NXTLayerLoading.h"
-#import "AGSMapView+NXTLayerLoading.h"
+#import "AGSLayer+LayerLoading.h"
+#import "AGSMapView+LayerLoading.h"
 #import "NSObject+NFNotificationsProvider.h"
 
 #define kWebMapID @"45895faa12ec4800a681df0b21d11564" // Hurricane Sandy evac layers
@@ -44,12 +44,12 @@
     self.outOfRangeColor = [UIColor whiteColor];
 
     [self registerAsListenerForNotifications:@{
-        kNXTLLNotification_LayerTrackingStartedForLayer     : strSelector(layerBeingTracked:),
-        kNXTLLNotification_LayerTrackingStoppedForLayer     : strSelector(layerNotBeingTracked:),
-        kNXTLLNotification_LayerLoading                     : strSelector(layerLoading:),
-        kNXTLLNotification_LayerLoaded                      : strSelector(layerLoaded:),
-        kNXTLLNotification_LayerNowVisibleByScaleRange      : strSelector(layerBecameVisible:),
-        kNXTLLNotification_LayerNoLongerVisibleByScaleRange : strSelector(layerWentOutOfScaleRange:)
+        kLLNotification_LayerTrackingStartedForLayer     : strSelector(layerBeingTracked:),
+        kLLNotification_LayerTrackingStoppedForLayer     : strSelector(layerNotBeingTracked:),
+        kLLNotification_LayerLoading                     : strSelector(layerLoading:),
+        kLLNotification_LayerLoaded                      : strSelector(layerLoaded:),
+        kLLNotification_LayerNowVisibleByScaleRange      : strSelector(layerBecameVisible:),
+        kLLNotification_LayerNoLongerVisibleByScaleRange : strSelector(layerWentOutOfScaleRange:)
     } onObjectOrObjects:nil];
     
 	[self reloadMap:nil];

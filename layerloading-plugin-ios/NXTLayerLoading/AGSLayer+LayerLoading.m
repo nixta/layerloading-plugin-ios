@@ -1,36 +1,36 @@
 //
-//  AGSLayer+NXTLayerLoading.m
+//  AGSLayer+LayerLoading.m
 //  arcgis-layerloading-ios
 //
 //  Created by Nicholas Furness on 1/15/13.
 //  Copyright (c) 2013 Esri. All rights reserved.
 //
 
-#import "AGSLayer+NXTLayerLoading.h"
+#import "AGSLayer+LayerLoading.h"
 #import <objc/runtime.h>
 
-#define kLL_LayerIsTrackingKey @"NXTLLLayerIsTracking"
-#define kLL_LayerWasInScaleKey @"NXTLLLayerWasInScale"
+#define kLL_LayerIsTrackingKey @"LLLayerIsTracking"
+#define kLL_LayerWasInScaleKey @"LLLayerWasInScale"
 
 #define kFeatureLayerTrackingQueryOpKey    @"queryOperation"
 #define kFeatureLayerTrackingConnectionKey @"connection"
 #define kTiledLayerTrackingQueueCountKey   @"queue.operationCount"
 
-NSString *const kNXTLLNotification_LayerLoading                     = @"NXTLLLayerLoading";
-NSString *const kNXTLLNotification_LayerLoaded                      = @"NXTLLLayerLoaded";
-NSString *const kNXTLLNotification_LayerNoLongerVisibleByScaleRange = @"NXTLLLayerNoLongerInScale";
-NSString *const kNXTLLNotification_LayerNowVisibleByScaleRange      = @"NXTLLLayerNowInScale";
-NSString *const kNXTLLNotification_LayerTrackingStartedForLayer     = @"NXTLLLayerTrackingOn";
-NSString *const kNXTLLNotification_LayerTrackingStoppedForLayer     = @"NXTLLLayerTrackingOff";
+NSString *const kLLNotification_LayerLoading                     = @"LLLayerLoading";
+NSString *const kLLNotification_LayerLoaded                      = @"LLLayerLoaded";
+NSString *const kLLNotification_LayerNoLongerVisibleByScaleRange = @"LLLayerNoLongerInScale";
+NSString *const kLLNotification_LayerNowVisibleByScaleRange      = @"LLLayerNowInScale";
+NSString *const kLLNotification_LayerTrackingStartedForLayer     = @"LLLayerTrackingOn";
+NSString *const kLLNotification_LayerTrackingStoppedForLayer     = @"LLLayerTrackingOff";
 
-@interface AGSLayer (NXTLayerLoading_Internal)
-@property (nonatomic, assign, readwrite) BOOL nxtll_isTracking;
-@property (nonatomic, assign, readwrite) BOOL nxtll_wasInScale;
+@interface AGSLayer (LayerLoading_Internal)
+@property (nonatomic, assign, readwrite) BOOL ll_isTracking;
+@property (nonatomic, assign, readwrite) BOOL ll_wasInScale;
 @end
 
-@implementation AGSLayer (NXTLayerLoading)
+@implementation AGSLayer (LayerLoading)
 #pragma mark - Tracking Properties
--(BOOL)nxtll_isTracking
+-(BOOL)ll_isTracking
 {
     NSNumber *temp = objc_getAssociatedObject(self, kLL_LayerIsTrackingKey);
     if (temp)
@@ -40,26 +40,26 @@ NSString *const kNXTLLNotification_LayerTrackingStoppedForLayer     = @"NXTLLLay
     return NO;
 }
 
--(void)setNxtll_isTracking:(BOOL)nxtll_isTracking
+-(void)setLl_isTracking:(BOOL)ll_isTracking
 {
-    NSNumber *temp = [NSNumber numberWithBool:nxtll_isTracking];
+    NSNumber *temp = [NSNumber numberWithBool:ll_isTracking];
     
     objc_setAssociatedObject(self, kLL_LayerIsTrackingKey, temp, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 
-    if (nxtll_isTracking)
+    if (ll_isTracking)
     {
-        [[NSNotificationCenter defaultCenter] postNotificationName:kNXTLLNotification_LayerTrackingStartedForLayer object:self];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(nxtll_mapZoomChanged:) name:AGSMapViewDidEndZoomingNotification object:self.mapView];
-        [self nxtll_scaleVisibilityChanged];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kLLNotification_LayerTrackingStartedForLayer object:self];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ll_mapZoomChanged:) name:AGSMapViewDidEndZoomingNotification object:self.mapView];
+        [self ll_scaleVisibilityChanged];
     }
     else
     {
-        [[NSNotificationCenter defaultCenter] postNotificationName:kNXTLLNotification_LayerTrackingStoppedForLayer object:self];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kLLNotification_LayerTrackingStoppedForLayer object:self];
         [[NSNotificationCenter defaultCenter] removeObserver:self name:AGSMapViewDidEndZoomingNotification object:self.mapView];
     }
 }
 
--(BOOL)nxtll_wasInScale
+-(BOOL)ll_wasInScale
 {
     NSNumber *temp = objc_getAssociatedObject(self, kLL_LayerWasInScaleKey);
     if (temp)
@@ -69,29 +69,29 @@ NSString *const kNXTLLNotification_LayerTrackingStoppedForLayer     = @"NXTLLLay
     return NO;
 }
 
--(void)setNxtll_wasInScale:(BOOL)newValue
+-(void)setLl_wasInScale:(BOOL)newValue
 {
     NSNumber *temp = [NSNumber numberWithBool:newValue];
     
     objc_setAssociatedObject(self, kLL_LayerWasInScaleKey, temp, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
--(void)nxtll_mapZoomChanged:(NSNotification *)notification
+-(void)ll_mapZoomChanged:(NSNotification *)notification
 {
-    [self nxtll_checkInScale];
+    [self ll_checkInScale];
 }
 
--(void)nxtll_checkInScale
+-(void)ll_checkInScale
 {
-    if (self.nxtll_wasInScale != self.isInScale) {
-        [self nxtll_scaleVisibilityChanged];
+    if (self.ll_wasInScale != self.isInScale) {
+        [self ll_scaleVisibilityChanged];
     }
 }
 
 #pragma mark - Tracking Control
--(void)nxtll_startTracking
+-(void)ll_startTracking
 {
-    self.nxtll_wasInScale = NO;
+    self.ll_wasInScale = NO;
     
     if ([self isKindOfClass:[AGSFeatureLayer class]])
     {
@@ -103,7 +103,7 @@ NSString *const kNXTLLNotification_LayerTrackingStoppedForLayer     = @"NXTLLLay
                 options:NSKeyValueObservingOptionNew + NSKeyValueObservingOptionInitial + NSKeyValueObservingOptionOld
                 context:nil];
         
-        self.nxtll_isTracking = YES;
+        self.ll_isTracking = YES;
     }
     else if ([self respondsToSelector:@selector(queue)])
     {
@@ -113,17 +113,17 @@ NSString *const kNXTLLNotification_LayerTrackingStoppedForLayer     = @"NXTLLLay
                options:NSKeyValueObservingOptionNew + NSKeyValueObservingOptionInitial + NSKeyValueObservingOptionOld
                context:nil];
 
-        self.nxtll_isTracking = YES;
+        self.ll_isTracking = YES;
     }
     else
     {
         // Not expecting to get here.
         NSLog(@"**** Cannot track loading on this kind of layer: %@", self);
-        self.nxtll_isTracking = NO;
+        self.ll_isTracking = NO;
     }
 }
 
--(void)nxtll_stopTracking
+-(void)ll_stopTracking
 {
     if ([self isKindOfClass:[AGSFeatureLayer class]])
     {
@@ -153,7 +153,7 @@ NSString *const kNXTLLNotification_LayerTrackingStoppedForLayer     = @"NXTLLLay
         NSLog(@"**** Cannot track loading on this kind of layer: %@", self);
     }
     
-    self.nxtll_isTracking = NO;
+    self.ll_isTracking = NO;
 }
 
 #pragma mark - Tracking Logic
@@ -169,7 +169,7 @@ NSString *const kNXTLLNotification_LayerTrackingStoppedForLayer     = @"NXTLLLay
             if (newCount > 0)
             {
                 NSLog(@"Unexpected start to layer load");
-                [self nxtll_layerLoaded];
+                [self ll_layerLoaded];
             }
         }
         else
@@ -180,12 +180,12 @@ NSString *const kNXTLLNotification_LayerTrackingStoppedForLayer     = @"NXTLLLay
             if (oldCount == 0 && newCount > 0)
             {
                 // Just started loading
-                [self nxtll_layerLoading];
+                [self ll_layerLoading];
             }
             else if (oldCount > 0 && newCount == 0)
             {
                 // Just finished loading
-                [self nxtll_layerLoaded];
+                [self ll_layerLoaded];
             }
         }
     }
@@ -230,7 +230,7 @@ NSString *const kNXTLLNotification_LayerTrackingStoppedForLayer     = @"NXTLLLay
             newConnection != (id)[NSNull null])
         {
             // Went from Not Loading to Loading
-            [self nxtll_layerLoading];
+            [self ll_layerLoading];
         }
         else
         {
@@ -238,32 +238,32 @@ NSString *const kNXTLLNotification_LayerTrackingStoppedForLayer     = @"NXTLLLay
                 oldConnection != (id)[NSNull null])
             {
                 // Went from Loading to Not Loading (aka Loaded)
-                [self nxtll_layerLoaded];
+                [self ll_layerLoaded];
             }
         }
     }
 }
 
 #pragma mark - Notification Generation
--(void)nxtll_scaleVisibilityChanged
+-(void)ll_scaleVisibilityChanged
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [[NSNotificationCenter defaultCenter] postNotificationName:self.isInScale?kNXTLLNotification_LayerNowVisibleByScaleRange:kNXTLLNotification_LayerNoLongerVisibleByScaleRange object:self];
-        self.nxtll_wasInScale = self.isInScale;
+        [[NSNotificationCenter defaultCenter] postNotificationName:self.isInScale?kLLNotification_LayerNowVisibleByScaleRange:kLLNotification_LayerNoLongerVisibleByScaleRange object:self];
+        self.ll_wasInScale = self.isInScale;
     });
 }
 
--(void)nxtll_layerLoading
+-(void)ll_layerLoading
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [[NSNotificationCenter defaultCenter] postNotificationName:kNXTLLNotification_LayerLoading object:self];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kLLNotification_LayerLoading object:self];
     });
 }
 
--(void)nxtll_layerLoaded
+-(void)ll_layerLoaded
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [[NSNotificationCenter defaultCenter] postNotificationName:kNXTLLNotification_LayerLoaded object:self];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kLLNotification_LayerLoaded object:self];
     });
 }
 @end
