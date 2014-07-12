@@ -36,13 +36,11 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
-    self.trackedLayers = [NSMutableArray array];
-    self.loadingLayers = [NSMutableSet set];
-    
-    self.loadingColor = [UIColor colorWithRed:0.849 green:0.385 blue:0.427 alpha:1];
-    self.loadedColor = [UIColor colorWithRed:0.349 green:0.701 blue:0.325 alpha:1];
-    self.outOfRangeColor = [UIColor whiteColor];
 
+    
+
+    /// *******************************
+    
     [self registerAsListenerForNotifications:@{
         kLLNotification_LayerTrackingStartedForLayer     : strSelector(layerBeingTracked:),
         kLLNotification_LayerTrackingStoppedForLayer     : strSelector(layerNotBeingTracked:),
@@ -52,6 +50,18 @@
         kLLNotification_LayerNoLongerVisibleByScaleRange : strSelector(layerWentOutOfScaleRange:)
     } onObjectOrObjects:nil];
     
+    /// *******************************
+    
+    
+    
+    
+    self.trackedLayers = [NSMutableArray array];
+    self.loadingLayers = [NSMutableSet set];
+    
+    self.loadingColor = [UIColor colorWithRed:0.849 green:0.385 blue:0.427 alpha:1];
+    self.loadedColor = [UIColor colorWithRed:0.349 green:0.701 blue:0.325 alpha:1];
+    self.outOfRangeColor = [UIColor whiteColor];
+
 	[self reloadMap:nil];
 }
 
@@ -188,10 +198,5 @@
     UILabel *nameLabel = (UILabel *)[cell viewWithTag:100];
     nameLabel.text = layer.name;
     return cell;
-}
-
-#pragma mark - Status Bar
--(BOOL)prefersStatusBarHidden {
-    return YES;
 }
 @end
