@@ -48,13 +48,17 @@ NSString *const kLLNotification_LayerTrackingStoppedForLayer     = @"LLLayerTrac
 
     if (ll_isTracking)
     {
+        // Notify that we're tracking
         [[NSNotificationCenter defaultCenter] postNotificationName:kLLNotification_LayerTrackingStartedForLayer object:self];
+        // Start watching the map for scale changes
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ll_mapZoomChanged:) name:AGSMapViewDidEndZoomingNotification object:self.mapView];
         [self ll_scaleVisibilityChanged];
     }
     else
     {
+        // Notify that we're no longer tracking
         [[NSNotificationCenter defaultCenter] postNotificationName:kLLNotification_LayerTrackingStoppedForLayer object:self];
+        // Stop watchingt the map view for scale changes
         [[NSNotificationCenter defaultCenter] removeObserver:self name:AGSMapViewDidEndZoomingNotification object:self.mapView];
     }
 }
