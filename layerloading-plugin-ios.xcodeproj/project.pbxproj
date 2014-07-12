@@ -7,10 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D9205AAC16A5CEB300609C25 /* AGSLayer+NXTLayerLoading.m in Sources */ = {isa = PBXBuildFile; fileRef = D9205AAB16A5CEB300609C25 /* AGSLayer+NXTLayerLoading.m */; };
-		D99936EC169F4C3A0030586D /* AGSMapView+NXTLayerLoading.m in Sources */ = {isa = PBXBuildFile; fileRef = D99936EB169F4C3A0030586D /* AGSMapView+NXTLayerLoading.m */; };
+		D9205AAC16A5CEB300609C25 /* AGSLayer+LayerLoading.m in Sources */ = {isa = PBXBuildFile; fileRef = D9205AAB16A5CEB300609C25 /* AGSLayer+LayerLoading.m */; };
+		D99936EC169F4C3A0030586D /* AGSMapView+LayerLoading.m in Sources */ = {isa = PBXBuildFile; fileRef = D99936EB169F4C3A0030586D /* AGSMapView+LayerLoading.m */; };
 		D99936F1169F5BFD0030586D /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D99936F0169F5BFD0030586D /* libc++.dylib */; };
 		D99936F3169F5C210030586D /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D99936F2169F5C210030586D /* OpenGLES.framework */; };
+		D9EEA3FC196ED8100076B476 /* NSObject+NFNotificationsProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = D9EEA3FB196ED8100076B476 /* NSObject+NFNotificationsProvider.m */; };
 		E169807B16387B6C00A1F2E5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E169807A16387B6C00A1F2E5 /* UIKit.framework */; };
 		E169807D16387B6C00A1F2E5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E169807C16387B6C00A1F2E5 /* Foundation.framework */; };
 		E169807F16387B6C00A1F2E5 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E169807E16387B6C00A1F2E5 /* CoreGraphics.framework */; };
@@ -34,12 +35,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		D9205AAA16A5CEB300609C25 /* AGSLayer+NXTLayerLoading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AGSLayer+NXTLayerLoading.h"; sourceTree = "<group>"; };
-		D9205AAB16A5CEB300609C25 /* AGSLayer+NXTLayerLoading.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AGSLayer+NXTLayerLoading.m"; sourceTree = "<group>"; };
-		D99936EA169F4C3A0030586D /* AGSMapView+NXTLayerLoading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AGSMapView+NXTLayerLoading.h"; sourceTree = "<group>"; };
-		D99936EB169F4C3A0030586D /* AGSMapView+NXTLayerLoading.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AGSMapView+NXTLayerLoading.m"; sourceTree = "<group>"; };
+		D9205AAA16A5CEB300609C25 /* AGSLayer+LayerLoading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "AGSLayer+LayerLoading.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		D9205AAB16A5CEB300609C25 /* AGSLayer+LayerLoading.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = "AGSLayer+LayerLoading.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		D99936EA169F4C3A0030586D /* AGSMapView+LayerLoading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AGSMapView+LayerLoading.h"; sourceTree = "<group>"; };
+		D99936EB169F4C3A0030586D /* AGSMapView+LayerLoading.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = "AGSMapView+LayerLoading.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		D99936F0169F5BFD0030586D /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
 		D99936F2169F5C210030586D /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		D9EEA3FA196ED8100076B476 /* NSObject+NFNotificationsProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+NFNotificationsProvider.h"; sourceTree = "<group>"; };
+		D9EEA3FB196ED8100076B476 /* NSObject+NFNotificationsProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+NFNotificationsProvider.m"; sourceTree = "<group>"; };
 		E169807616387B6C00A1F2E5 /* layerloading-plugin-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "layerloading-plugin-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E169807A16387B6C00A1F2E5 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		E169807C16387B6C00A1F2E5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -99,20 +102,31 @@
 				E169809516387B6C00A1F2E5 /* MainStoryboard_iPad.storyboard */,
 				E169809816387B6C00A1F2E5 /* SampleViewController.h */,
 				E169809916387B6C00A1F2E5 /* SampleViewController.m */,
+				D9EEA3FD196ED8160076B476 /* Categories */,
 				E169808116387B6C00A1F2E5 /* Supporting Files */,
 			);
 			path = "Sample App";
 			sourceTree = "<group>";
 		};
-		D99936E6169F47670030586D /* NXTLayerLoading */ = {
+		D99936E6169F47670030586D /* LayerLoading */ = {
 			isa = PBXGroup;
 			children = (
-				D99936EA169F4C3A0030586D /* AGSMapView+NXTLayerLoading.h */,
-				D99936EB169F4C3A0030586D /* AGSMapView+NXTLayerLoading.m */,
-				D9205AAA16A5CEB300609C25 /* AGSLayer+NXTLayerLoading.h */,
-				D9205AAB16A5CEB300609C25 /* AGSLayer+NXTLayerLoading.m */,
+				D9205AAA16A5CEB300609C25 /* AGSLayer+LayerLoading.h */,
+				D9205AAB16A5CEB300609C25 /* AGSLayer+LayerLoading.m */,
+				D99936EA169F4C3A0030586D /* AGSMapView+LayerLoading.h */,
+				D99936EB169F4C3A0030586D /* AGSMapView+LayerLoading.m */,
 			);
+			name = LayerLoading;
 			path = NXTLayerLoading;
+			sourceTree = "<group>";
+		};
+		D9EEA3FD196ED8160076B476 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				D9EEA3FA196ED8100076B476 /* NSObject+NFNotificationsProvider.h */,
+				D9EEA3FB196ED8100076B476 /* NSObject+NFNotificationsProvider.m */,
+			);
+			name = Categories;
 			sourceTree = "<group>";
 		};
 		E169806B16387B6C00A1F2E5 = {
@@ -154,7 +168,7 @@
 		E169808016387B6C00A1F2E5 /* layerloading-plugin-ios */ = {
 			isa = PBXGroup;
 			children = (
-				D99936E6169F47670030586D /* NXTLayerLoading */,
+				D99936E6169F47670030586D /* LayerLoading */,
 				D9205AAD16A5DBD500609C25 /* Sample App */,
 			);
 			path = "layerloading-plugin-ios";
@@ -247,8 +261,9 @@
 				E169808716387B6C00A1F2E5 /* main.m in Sources */,
 				E169808B16387B6C00A1F2E5 /* SampleAppDelegate.m in Sources */,
 				E169809A16387B6C00A1F2E5 /* SampleViewController.m in Sources */,
-				D99936EC169F4C3A0030586D /* AGSMapView+NXTLayerLoading.m in Sources */,
-				D9205AAC16A5CEB300609C25 /* AGSLayer+NXTLayerLoading.m in Sources */,
+				D99936EC169F4C3A0030586D /* AGSMapView+LayerLoading.m in Sources */,
+				D9205AAC16A5CEB300609C25 /* AGSLayer+LayerLoading.m in Sources */,
+				D9EEA3FC196ED8100076B476 /* NSObject+NFNotificationsProvider.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

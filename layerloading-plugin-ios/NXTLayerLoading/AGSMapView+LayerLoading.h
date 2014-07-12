@@ -1,5 +1,5 @@
 //
-//  AGSMapView+NXTLayerLoading.h
+//  AGSMapView+LayerLoading.h
 //  arcgis-layerloading-ios
 //
 //  Created by Nicholas Furness on 1/10/13.
@@ -10,10 +10,10 @@
 // hooks itself onto any AGSMapView as long as the source files are compiled into your target.
 //
 // If you want to disable auto-tracking and control layer tracking manually on a per-layer
-// basis, include this and set self.mapView.nxtll_autoTrackLayer = NO
+// basis, include this and set self.mapView.ll_autoTrackLayer = NO
 
 #import <ArcGIS/ArcGIS.h>
 
-@interface AGSMapView (NXTLayerLoading)
-@property (nonatomic, assign) BOOL nxtll_autoTrackLayers;
+@interface AGSMapView (LayerLoading)
+@property (nonatomic, assign) BOOL ll_autoTrackLayers;
 @end

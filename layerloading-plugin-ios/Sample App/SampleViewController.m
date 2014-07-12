@@ -8,8 +8,9 @@
 
 #import "SampleViewController.h"
 #import <ArcGIS/ArcGIS.h>
-#import "AGSLayer+NXTLayerLoading.h"
-#import "AGSMapView+NXTLayerLoading.h"
+#import "AGSLayer+LayerLoading.h"
+#import "AGSMapView+LayerLoading.h"
+#import "NSObject+NFNotificationsProvider.h"
 
 #define kWebMapID @"45895faa12ec4800a681df0b21d11564" // Hurricane Sandy evac layers
 //#define kWebMapID @"a0cdf35893e3467798a0d6a9a8447d8b" // DSEU iOS Session Demo WebMap
@@ -35,6 +36,25 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
+
+    
+
+    /// *******************************
+    
+    [self registerAsListenerForNotifications:@{
+        kLLNotification_LayerTrackingStartedForLayer     : strSelector(layerBeingTracked:),
+        kLLNotification_LayerTrackingStoppedForLayer     : strSelector(layerNotBeingTracked:),
+        kLLNotification_LayerLoading                     : strSelector(layerLoading:),
+        kLLNotification_LayerLoaded                      : strSelector(layerLoaded:),
+        kLLNotification_LayerNowVisibleByScaleRange      : strSelector(layerBecameVisible:),
+        kLLNotification_LayerNoLongerVisibleByScaleRange : strSelector(layerWentOutOfScaleRange:)
+    } onObjectOrObjects:nil];
+    
+    /// *******************************
+    
+    
+    
+    
     self.trackedLayers = [NSMutableArray array];
     self.loadingLayers = [NSMutableSet set];
     
@@ -42,36 +62,6 @@
     self.loadedColor = [UIColor colorWithRed:0.349 green:0.701 blue:0.325 alpha:1];
     self.outOfRangeColor = [UIColor whiteColor];
 
-	// Find out when layers are being tracked
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(layerBeingTracked:)
-                                                 name:kNXTLLNotification_LayerTrackingStartedForLayer
-                                               object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(layerNotBeingTracked:)
-                                                 name:kNXTLLNotification_LayerTrackingStoppedForLayer
-                                               object:nil];
-    
-    // Find out when they start and stop loading data
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(layerLoading:)
-                                                 name:kNXTLLNotification_LayerLoading
-                                               object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(layerLoaded:)
-                                                 name:kNXTLLNotification_LayerLoaded
-                                               object:nil];
-    
-    // Find out when they go in and out of visible scale range
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(layerBecameVisible:)
-                                                 name:kNXTLLNotification_LayerNowVisibleByScaleRange
-                                               object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(layerWentOutOfScaleRange:)
-                                                 name:kNXTLLNotification_LayerNoLongerVisibleByScaleRange
-                                               object:nil];
-    
 	[self reloadMap:nil];
 }
 
@@ -104,16 +94,15 @@
 
 -(void)layerNotBeingTracked:(NSNotification *)n
 {
-    NSUInteger oldIndex = [self.trackedLayers indexOfObject:n.object];
+    NSInteger oldIndex = [self.trackedLayers indexOfObject:n.object];
     if (oldIndex > -1) {
         AGSLayer *layer = n.object;
         NSLog(@"  Not Tracking: %@", layer.name);
-        [self.layerTableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:oldIndex inSection:0]]
-                                   withRowAnimation:UITableViewRowAnimationFade];
         [self.trackedLayers removeObject:layer];
         [self.loadingLayers removeObject:layer];
-        
-        [self updateLayerListTable];
+
+        [self.layerTableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:oldIndex inSection:0]]
+                                   withRowAnimation:UITableViewRowAnimationTop];
     }
 }
 
@@ -153,8 +142,7 @@
 #pragma mark - Map Load/Reload
 -(IBAction)reloadMap:(id)sender {
 	// Create a webmap pointing to our ArcGIS.com resource.
-	self.webMap = [AGSWebMap webMapWithItemId:kWebMapID
-								   credential:nil];
+	self.webMap = [AGSWebMap webMapWithItemId:kWebMapID credential:nil];
 
 	// Set the delegate so we'll know when things fail or succeed
 	self.webMap.delegate = self;
